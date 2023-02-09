@@ -47,7 +47,7 @@ public class CategoriaController {
 	@PostMapping
 	public String[] alta(@RequestBody Categoria c) {
 		c.setId_categoria(0);
-		if(c.isValid()) {
+		if(c.isValidInsert()) {
 			cDao.save(c);
 			return new String[] {"200","Registro Salvado"};
 		}else {
@@ -57,8 +57,13 @@ public class CategoriaController {
 	
 	@PutMapping
 	public String[] modificacion(@RequestBody Categoria c) {
-		cDao.save(c);
-		return new String[] {"200","Registro Modificado"};
+		if(c.isValidUpdate()) {
+			cDao.save(c);
+			return new String[] {"200","Registro Modificado"};
+		}else {
+			return new String[] {"500","Registro No Modificado"};
+		}
+		
 	}
 	
 	@DeleteMapping("/{id}")

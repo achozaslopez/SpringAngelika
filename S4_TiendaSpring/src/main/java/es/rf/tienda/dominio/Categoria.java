@@ -1,6 +1,15 @@
 package es.rf.tienda.dominio;
 
+import java.io.Serializable;
+
 import es.rf.tienda.util.Validator;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 /**
  * 
@@ -10,22 +19,22 @@ import es.rf.tienda.util.Validator;
  * @version		02/02/2023
  *
  */
-public class Categoria {
+@Entity
+@Table(schema = "ALUMNO_ACL", name = "CATEGORIAS")
+public class Categoria implements Serializable, Modelo{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id_categoria;			//identificador categoria
 	
+	@Column(nullable=false)
 	private String cat_nombre;			//nombre de la categoria
 	
+	@Column
 	private String cat_descripcion;		//descripcion de la categoria
 	
 	
 	public Categoria(){}
-	
-	
-	public boolean isValid(){	
-		return !Validator.isVacio(cat_nombre) &&
-				id_categoria > 0;
-	}
 	
 	/**
 	 * Getter para identificador de categoria
@@ -116,6 +125,18 @@ public class Categoria {
 	public String toString() {
 		return "Categoria [id_categoria=" + id_categoria + ", cat_nombre=" + cat_nombre + ", cat_descripcion="
 				+ cat_descripcion + "]";
+	}
+
+	@Transient
+	public boolean isValidInsert() {
+		boolean result = !Validator.isVacio(cat_nombre);
+		return result;
+	}
+
+	@Transient
+	public boolean isValidUpdate() {
+		boolean result = !Validator.isVacio(cat_nombre) && id_categoria > 0;
+		return result;
 	}
 	
 	
