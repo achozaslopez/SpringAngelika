@@ -65,7 +65,9 @@ public class Categoria implements Serializable, Modelo{
 	 * 
 	 */
 	public void setCat_nombre(String cat_nombre) {
-		this.cat_nombre = cat_nombre;
+		if(cat_nombre.length() < 50 && cat_nombre.length() > 5) {
+			this.cat_nombre = cat_nombre;
+		}
 	}
 	
 	/**
@@ -81,7 +83,11 @@ public class Categoria implements Serializable, Modelo{
 	 * 
 	 */
 	public void setCat_descripcion(String cat_descripcion) {
-		this.cat_descripcion = cat_descripcion;
+		if(cat_descripcion.length()> 200) {
+			cat_descripcion = cat_descripcion.substring(0,200); //Truncar la cadena al llegar a longitud 200
+			this.cat_descripcion = cat_descripcion;
+		}
+		
 	}
 
 

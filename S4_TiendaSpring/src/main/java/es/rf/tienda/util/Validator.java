@@ -52,6 +52,8 @@ public class Validator {
 	 * Longitud que debe tener todo DNI pasado a la aplicacion.
 	 */
 	private final static int LONGITUD_DNI = 12;
+	
+	private final static String VACIO_PATTERN = "^\\s*$";
 
 	/* ***************************************************************************************
 	 * NOMBRE: isAlfanumeric                                                                 *
@@ -73,7 +75,12 @@ public class Validator {
 	}
 
 	public static boolean isVacio(String prueba){
-		return true;
+		boolean esVacio = false;
+		if(esVacio = prueba.matches(VACIO_PATTERN)) {
+			return esVacio = true;
+		}
+		return esVacio;
+		
 	}
 	
 	/* ***************************************************************************************
