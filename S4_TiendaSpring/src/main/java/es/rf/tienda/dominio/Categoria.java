@@ -2,7 +2,10 @@ package es.rf.tienda.dominio;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import es.rf.tienda.util.Validator;
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,10 +30,10 @@ public class Categoria implements Serializable, Modelo{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id_categoria;			//identificador categoria
 	
-	@Column(nullable=false)
+	@Column(nullable=true)
 	private String cat_nombre;			//nombre de la categoria
 	
-	@Column
+	@Column(nullable=false, length = 200)
 	private String cat_descripcion;		//descripcion de la categoria
 	
 	
@@ -83,10 +86,8 @@ public class Categoria implements Serializable, Modelo{
 	 * 
 	 */
 	public void setCat_descripcion(String cat_descripcion) {
-		if(cat_descripcion.length()> 200) {
-			cat_descripcion = cat_descripcion.substring(0,200); //Truncar la cadena al llegar a longitud 200
-			this.cat_descripcion = cat_descripcion;
-		}
+		
+			this.cat_descripcion = StringUtils.truncate(cat_descripcion,200);//Truncar la cadena al llegar a longitud 200
 		
 	}
 
@@ -134,12 +135,14 @@ public class Categoria implements Serializable, Modelo{
 	}
 
 	@Transient
+	@JsonIgnore
 	public boolean isValidInsert() {
 		boolean result = !Validator.isVacio(cat_nombre);
 		return result;
 	}
 
 	@Transient
+	@JsonIgnore
 	public boolean isValidUpdate() {
 		boolean result = !Validator.isVacio(cat_nombre) && id_categoria > 0;
 		return result;

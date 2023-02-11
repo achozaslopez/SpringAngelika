@@ -27,9 +27,6 @@ public class CategoriaController {
 	@Autowired
 	private ICategoriaDao cDao;
 	
-//	public void ICategoriaDao(ICategoriaDao cDao) {
-//		this.cDao = cDao;
-//	}
 	
 	@GetMapping("{id}")
 	public void leerUno(@PathVariable("id")int id) {
@@ -40,7 +37,7 @@ public class CategoriaController {
 	}
 	
 	@GetMapping()
-	public List<Categoria> leetTodos(){
+	public List<Categoria> leerTodos(){
 		return cDao.findAll();
 	}
 	
