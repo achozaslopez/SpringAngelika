@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import es.rf.tienda.util.Validator;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,39 +13,58 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+import es.rf.tienda.exception.DomainException;
+import es.rf.tienda.util.ErrorMessages;
+import es.rf.tienda.util.Validator;
+
 /**
  * 
- * Nombre		Categoria
- * Descripcion	Lista de categorías
- * @author 		Angelika Chozas
- * @version		02/02/2023
+ * Nombre Categoria 
+ * 
+ * @author Angelika Chozas
+ * @version ene. de 2023
  *
  */
+
+@SuppressWarnings("serial")
 @Entity
 @Table(schema = "ALUMNO_ACL", name = "CATEGORIAS")
-public class Categoria implements Serializable, Modelo{
-	
+public class Categoria implements Serializable {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id_categoria;			//identificador categoria
-	
-	@Column(nullable=true)
-	private String cat_nombre;			//nombre de la categoria
-	
-	@Column(nullable=false, length = 200)
-	private String cat_descripcion;		//descripcion de la categoria
-	
-	
-	public Categoria(){}
-	
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	private int id_categoria; // identificador categoria
+
+	@Column(nullable = false, length = 50)
+	private String cat_nombre; // nombre de la categoria
+
+	@Column(nullable = true, length = 200)
+	private String cat_descripcion; // descripcion de la categoria
+
+	public Categoria(int id_categoria, String cat_nombre, String cat_descripcion) {
+		this.id_categoria = id_categoria;
+		this.cat_nombre = cat_nombre;
+		this.cat_descripcion = cat_descripcion;
+	}
+
+	public Categoria() {
+	}
+
+	@Transient
+	@JsonIgnore
+	public boolean isValid() {
+		return !Validator.isVacio(cat_nombre) && id_categoria > 0;
+	}
+
 	/**
 	 * Getter para identificador de categoria
+	 * 
 	 * @return Integer con el id de la categoria
 	 */
 	public int getId_categoria() {
 		return id_categoria;
 	}
-	
+
 	/**
 	 * Setter para identificador de categoria
 	 * 
@@ -54,43 +72,45 @@ public class Categoria implements Serializable, Modelo{
 	public void setId_categoria(int id_categoria) {
 		this.id_categoria = id_categoria;
 	}
-	
+
 	/**
 	 * Getter para el nombre de categoria
+	 * 
 	 * @return cadena con el nombre de la categoria
 	 */
 	public String getCat_nombre() {
 		return cat_nombre;
+
 	}
-	
+
 	/**
 	 * Setter para el nombre de categoria
 	 * 
-	 */
-	public void setCat_nombre(String cat_nombre) {
-		if(cat_nombre.length() < 50 && cat_nombre.length() > 5) {
+	 */ 
+	public void setCat_nombre(String cat_nombre) throws DomainException {
+		if (Validator.cumpleLongitud(cat_nombre, 5, 50)) {
 			this.cat_nombre = cat_nombre;
+		} else {
+			throw new DomainException(ErrorMessages.PROERR_003_1);
 		}
 	}
-	
+
 	/**
 	 * Getter para la descripcion de categoria
+	 * 
 	 * @return cadena con la descripcion de la categoria
 	 */
 	public String getCat_descripcion() {
 		return cat_descripcion;
 	}
-	
+
 	/**
 	 * setter para la descripcion de categoria
 	 * 
 	 */
 	public void setCat_descripcion(String cat_descripcion) {
-		
-			this.cat_descripcion = StringUtils.truncate(cat_descripcion,200);//Truncar la cadena al llegar a longitud 200
-		
+		this.cat_descripcion = cat_descripcion == null ? null : StringUtils.truncate(cat_descripcion, 200);
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -101,7 +121,6 @@ public class Categoria implements Serializable, Modelo{
 		result = prime * result + id_categoria;
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -127,7 +146,6 @@ public class Categoria implements Serializable, Modelo{
 		return true;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Categoria [id_categoria=" + id_categoria + ", cat_nombre=" + cat_nombre + ", cat_descripcion="
@@ -138,6 +156,8 @@ public class Categoria implements Serializable, Modelo{
 	@JsonIgnore
 	public boolean isValidInsert() {
 		boolean result = !Validator.isVacio(cat_nombre);
+		System.out.println(Validator.isVacio(cat_nombre));
+
 		return result;
 	}
 
@@ -145,8 +165,10 @@ public class Categoria implements Serializable, Modelo{
 	@JsonIgnore
 	public boolean isValidUpdate() {
 		boolean result = !Validator.isVacio(cat_nombre) && id_categoria > 0;
+		System.out.println(Validator.isVacio(cat_nombre));
+		System.out.println(id_categoria > 0);
 		return result;
+
 	}
-	
-	
+
 }
