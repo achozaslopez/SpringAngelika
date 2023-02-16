@@ -4,12 +4,14 @@ import java.util.List;
 
 import es.rf.tienda.dominio.Categoria;
 
-public interface IServicioCategoria {
-	
-	public boolean insert(Categoria t);
-	public boolean update(Categoria t);
-	public boolean deleteById(int s);
-	public List<Categoria> listAll();
-	public Categoria leerUno(int s);
 
+public interface IServicioCategoria {
+
+	public boolean insert(Categoria c);
+	public boolean update (Categoria c);
+	public Categoria leerUno(int id);
+	public List<Categoria> listAll();
+	public void deleteById(int id);
+	
 }
+
